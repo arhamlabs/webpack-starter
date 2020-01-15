@@ -1,2 +1,5 @@
-# webpack-starter
-Webpack initialisation for all web projects
+# Webpack Starter Template [WIP]
+
+`npm start`: Development environment
+
+`npm run build`: Production environment

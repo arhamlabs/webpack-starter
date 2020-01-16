@@ -4,27 +4,23 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { webpackCommom, otherHtmlFilesList } = require('./webpack.common');
+const { webpackCommom, htmlFiles, jsFiles } = require('./webpack.common');
 
-const IndexHtmlFileConfig = new HtmlWebpackPlugin({
-  filename: 'index.html',
-  template: './index.html',
-  chunks: ['main', 'home'],
-  minify: {
-    collapseWhitespace: true,
-    removeComments: true,
-    removeRedundantAttributes: true,
-    removeScriptTypeAttributes: true,
-    removeStyleLinkTypeAttributes: true,
-    useShortDoctype: true,
-  },
-});
+const HtmlFilesConfig = htmlFiles.map(fileName => {
+  let chunks = ['main'];
 
-const otherHtmlFilesConfig = otherHtmlFilesList.map(fileName => {
+  // if there is pages-about key in jsFiles object
+  // then add it to chunk otherwise only main chunk is added
+  // because if condition is not met
+
+  if (`pages-${fileName.slice(0, -5)}` in jsFiles) {
+    chunks = [`pages-${fileName.slice(0, -5)}`, ...chunks];
+  }
+
   return new HtmlWebpackPlugin({
-    filename: `${fileName}.html`,
-    template: `${__dirname}/${fileName}.html`,
-    chunks: ['main'],
+    filename: `./${fileName}`,
+    template: `./${fileName}`,
+    chunks,
     minify: {
       collapseWhitespace: true,
       removeComments: true,
@@ -64,8 +60,7 @@ const prodOptions = {
       { from: 'images', to: 'images' },
     ]),
     new MiniCssExtractPlugin({ filename: '[name].[contentHash].css' }),
-    IndexHtmlFileConfig,
-    ...otherHtmlFilesConfig,
+    ...HtmlFilesConfig,
   ],
 };
 

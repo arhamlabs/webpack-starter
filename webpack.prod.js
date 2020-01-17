@@ -1,7 +1,6 @@
 const path = require('path');
 const merge = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { webpackCommom, htmlFiles, jsFiles } = require('./webpack.common');
@@ -55,10 +54,6 @@ const prodOptions = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyPlugin([
-      { from: 'favicon.ico', to: 'favicon.ico' },
-      { from: 'images', to: 'images' },
-    ]),
     new MiniCssExtractPlugin({ filename: '[name].[contentHash].css' }),
     ...HtmlFilesConfig,
   ],

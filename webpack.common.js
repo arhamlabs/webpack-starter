@@ -1,6 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 const { ProvidePlugin } = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 let entry = {};
 let htmlFiles = [];
@@ -32,26 +33,38 @@ exports.webpackCommom = {
   module: {
     rules: [
       {
-        test: /\.(png|jpe?g|gif|svg|woff(2)?|ttf|eot)$/,
+        test: /.\html$/,
+        use: [
+          {
+            loader: 'html-loader',
+            options: {
+              minimize: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/,
         use: [
           {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'assets/images',
+              outputPath: './assets/images',
+              esModule: false,
             },
           },
         ],
       },
       {
         test: /\.(woff(2)?|ttf|eot)$/,
-        exclude: /(node_modules|bower_components)/,
         use: [
           {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'assets/fonts',
+              outputPath: './assets/fonts',
+              esModule: false,
             },
           },
         ],
@@ -64,13 +77,14 @@ exports.webpackCommom = {
       $: 'jquery',
       jQuery: 'jquery',
     }),
+    new CopyWebpackPlugin([{ from: 'favicon.ico', to: 'favicon.ico' }]),
   ],
   resolve: {
     alias: {
-      Js: path.resolve(__dirname, 'src/scripts/'),
-      Scss: path.resolve(__dirname, 'src/scss/'),
-      Images: path.resolve(__dirname, 'src/assets/images/'),
-      Fonts: path.resolve(__dirname, 'src/assets/fonts/'),
+      Js: path.join(__dirname, 'src/scripts/'),
+      Scss: path.join(__dirname, 'src/scss/'),
+      Images: path.join(__dirname, 'src/assets/images/'),
+      Fonts: path.join(__dirname, 'src/assets/fonts/'),
     },
   },
 };

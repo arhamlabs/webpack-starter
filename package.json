@@ -5,7 +5,7 @@
   "main": "src/scripts/main.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js && npm run img",
-    "start": "webpack-dev-server --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js --open",
     "img": "imagemin images/* --out-dir=dist/images && imagemin images/*  --plugin.webp.quality=95 --out-dir=dist/images"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "css-loader": "^3.4.2",
     "file-loader": "^5.0.2",
     "glob": "^7.1.6",
+    "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "imagemin-cli": "^5.1.0",
     "imagemin-webp": "^5.1.0",

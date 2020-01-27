@@ -2,6 +2,8 @@ const path = require('path');
 const merge = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserJSPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { webpackCommom, htmlFiles, jsFiles } = require('./webpack.common');
 
@@ -34,8 +36,16 @@ const HtmlFilesConfig = htmlFiles.map(fileName => {
 const prodOptions = {
   mode: 'production',
   output: {
-    filename: '[name].[contentHash].js',
+    filename: 'js/[name].[contentHash].js',
     path: path.resolve(__dirname, 'dist'),
+    // Remove this when webpack updates to v5 because this behaiour will come by default
+    futureEmitAssets: true,
+  },
+  optimization: {
+    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   module: {
     rules: [
@@ -48,13 +58,22 @@ const prodOptions = {
       },
       {
         test: /\.(s[ac]|c)ss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+            },
+          },
+          'css-loader',
+          'sass-loader',
+        ],
       },
     ],
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({ filename: '[name].[contentHash].css' }),
+    new MiniCssExtractPlugin({ filename: 'css/[name].[contentHash].css' }),
     ...HtmlFilesConfig,
   ],
 };

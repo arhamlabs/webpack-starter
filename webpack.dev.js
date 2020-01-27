@@ -27,7 +27,7 @@ const HtmlFilesConfig = htmlFiles.map(fileName => {
 const devOptions = {
   mode: 'development',
   output: {
-    filename: '[name].js',
+    filename: 'js/[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {
